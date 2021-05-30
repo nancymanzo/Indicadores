@@ -8,32 +8,19 @@ library(survey)
 library(dplyr)
 library(haven) 
 
+
 #Base completa de la ENDIREH
 endireh <- read_dta("BD_MUJERES_ENDIREH2016_SitioINEGI.dta")
 
-endireh_1 <- endireh %>% 
-  mutate(existencia=case_when(
-    p9_8_1==1 |
-      p9_8_2 ==1|
-      p9_8_3 ==1|
-      p9_8_4 ==1|
-      p9_8_5 ==1|
-      p9_8_6 ==1|
-      p9_8_7 ==1|
-      p9_8_8 ==1|
-      p9_8_9 ==1|
-      p9_8_10 ==1 |
-      (p9_8_11==1 & (p9_8_12==2 | p9_8_13==2))~ 1,
-    TRUE ~ 0))
 
-
-#Formato de design
-endireh_1 %>% 
+#Formato de design de survey
+survey_endireh <- endireh %>% 
   as_survey_design(
     ids=upm_dis,
     strata=est_dis,
     weights=fac_muj,
-    nest=TRUE)->survey_endireh
+    nest=TRUE)
+
 
 survey_endireh %>% 
   mutate(existencia=case_when(
