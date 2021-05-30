@@ -22,6 +22,7 @@ survey_endireh <- endireh %>%
     nest=TRUE)
 
 
+#Calculo del indicador y sus estimadores estadísticos
 survey_endireh %>% 
   mutate(existencia=case_when(
     p9_8_1==1 |
@@ -38,4 +39,4 @@ survey_endireh %>%
   filter(existencia==1) %>% 
   group_by(nom_ent) %>% 
   survey_tally(name= "obste",
-               vartype= c("se", "ci", "var", "cv"))
+               vartype= c("se", "ci", "var", "cv")) #Ojo en los tabulados el CV está en % (multiplicar 100).
