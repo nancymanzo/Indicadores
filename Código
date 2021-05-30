@@ -40,3 +40,251 @@ survey_endireh %>%
   group_by(nom_ent) %>% 
   survey_tally(name= "obste",
                vartype= c("se", "ci", "var", "cv")) #Ojo en los tabulados el CV está en % (multiplicar 100).
+               
+               
+               
+
+#Estimadores desglosados por tipo de maltrato
+survey_endireh %>% 
+  mutate(existencia=case_when(
+    p9_8_1==1 |
+      p9_8_2 ==1|
+      p9_8_3 ==1|
+      p9_8_4 ==1|
+      p9_8_5 ==1|
+      p9_8_6 ==1|
+      p9_8_7 ==1|
+      p9_8_8 ==1|
+      p9_8_9 ==1|
+      p9_8_10 ==1 |
+      (p9_8_11==1 & (p9_8_12==2 | p9_8_13==2))~ 1, TRUE ~ 0)) %>% 
+  group_by(p9_8_1) %>% 
+  filter(existencia==1, 
+         nom_ent=="Ciudad de Mexico",
+         p9_8_1==1) %>% 
+  survey_tally(name= "n",
+               vartype= c("cv", "se", "ci", "var"))->p9_8_1
+
+survey_endireh %>% 
+  mutate(existencia=case_when(
+    p9_8_1==1 |
+      p9_8_2 ==1|
+      p9_8_3 ==1|
+      p9_8_4 ==1|
+      p9_8_5 ==1|
+      p9_8_6 ==1|
+      p9_8_7 ==1|
+      p9_8_8 ==1|
+      p9_8_9 ==1|
+      p9_8_10 ==1 |
+      (p9_8_11==1 & (p9_8_12==2 | p9_8_13==2))~ 1, TRUE ~ 0)) %>% 
+  group_by(p9_8_2) %>% 
+  filter(existencia==1, 
+         nom_ent=="Ciudad de Mexico",
+         p9_8_2==1) %>% 
+  survey_tally(name= "n",
+               vartype= c("cv", "se", "ci", "var"))->p9_8_2
+
+
+survey_endireh %>% 
+  mutate(existencia=case_when(
+    p9_8_1==1 |
+      p9_8_2 ==1|
+      p9_8_3 ==1|
+      p9_8_4 ==1|
+      p9_8_5 ==1|
+      p9_8_6 ==1|
+      p9_8_7 ==1|
+      p9_8_8 ==1|
+      p9_8_9 ==1|
+      p9_8_10 ==1 |
+      (p9_8_11==1 & (p9_8_12==2 | p9_8_13==2))~ 1, TRUE ~ 0)) %>% 
+  group_by(p9_8_3) %>% 
+  filter(existencia==1, 
+         nom_ent=="Ciudad de Mexico",
+         p9_8_3==1) %>% 
+  survey_tally(name= "n",
+               vartype= c("cv", "se", "ci", "var"))->p9_8_3
+
+
+survey_endireh %>% 
+  mutate(existencia=case_when(
+    p9_8_1==1 |
+      p9_8_2 ==1|
+      p9_8_3 ==1|
+      p9_8_4 ==1|
+      p9_8_5 ==1|
+      p9_8_6 ==1|
+      p9_8_7 ==1|
+      p9_8_8 ==1|
+      p9_8_9 ==1|
+      p9_8_10 ==1 |
+      (p9_8_11==1 & (p9_8_12==2 | p9_8_13==2))~ 1, TRUE ~ 0)) %>% 
+  group_by(p9_8_4) %>% 
+  filter(existencia==1, 
+         nom_ent=="Ciudad de Mexico",
+         p9_8_4==1) %>% 
+  survey_tally(name= "n",
+               vartype= c("cv", "se", "ci", "var"))->p9_8_4
+
+
+survey_endireh %>% 
+  mutate(existencia=case_when(
+    p9_8_1==1 |
+      p9_8_2 ==1|
+      p9_8_3 ==1|
+      p9_8_4 ==1|
+      p9_8_5 ==1|
+      p9_8_6 ==1|
+      p9_8_7 ==1|
+      p9_8_8 ==1|
+      p9_8_9 ==1|
+      p9_8_10 ==1 |
+      (p9_8_11==1 & (p9_8_12==2 | p9_8_13==2))~ 1, TRUE ~ 0)) %>% 
+  group_by(p9_8_5) %>% 
+  filter(existencia==1, 
+         nom_ent=="Ciudad de Mexico",
+         p9_8_5==1) %>% 
+  survey_tally(name= "n",
+               vartype= c("cv", "se", "ci", "var"))->p9_8_5
+
+survey_endireh %>% 
+  mutate(existencia=case_when(
+    p9_8_1==1 |
+      p9_8_2 ==1|
+      p9_8_3 ==1|
+      p9_8_4 ==1|
+      p9_8_5 ==1|
+      p9_8_6 ==1|
+      p9_8_7 ==1|
+      p9_8_8 ==1|
+      p9_8_9 ==1|
+      p9_8_10 ==1 |
+      (p9_8_11==1 & (p9_8_12==2 | p9_8_13==2))~ 1, TRUE ~ 0)) %>% 
+  group_by(p9_8_6) %>% 
+  filter(existencia==1, 
+         nom_ent=="Ciudad de Mexico",
+         p9_8_6==1) %>% 
+  survey_tally(name= "n",
+               vartype= c("cv", "se", "ci", "var"))->p9_8_6
+
+
+
+
+survey_endireh %>% 
+  mutate(existencia=case_when(
+    p9_8_1==1 |
+      p9_8_2 ==1|
+      p9_8_3 ==1|
+      p9_8_4 ==1|
+      p9_8_5 ==1|
+      p9_8_6 ==1|
+      p9_8_7 ==1|
+      p9_8_8 ==1|
+      p9_8_9 ==1|
+      p9_8_10 ==1 |
+      (p9_8_11==1 & (p9_8_12==2 | p9_8_13==2))~ 1, TRUE ~ 0)) %>% 
+  group_by(p9_8_7) %>% 
+  filter(existencia==1, 
+         nom_ent=="Ciudad de Mexico",
+         p9_8_7==1) %>% 
+  survey_tally(name= "n",
+               vartype= c("cv", "se", "ci", "var"))->p9_8_7
+
+
+survey_endireh %>% 
+  mutate(existencia=case_when(
+    p9_8_1==1 |
+      p9_8_2 ==1|
+      p9_8_3 ==1|
+      p9_8_4 ==1|
+      p9_8_5 ==1|
+      p9_8_6 ==1|
+      p9_8_7 ==1|
+      p9_8_8 ==1|
+      p9_8_9 ==1|
+      p9_8_10 ==1 |
+      (p9_8_11==1 & (p9_8_12==2 | p9_8_13==2))~ 1, TRUE ~ 0)) %>% 
+  group_by(p9_8_8) %>% 
+  filter(existencia==1, 
+         nom_ent=="Ciudad de Mexico",
+         p9_8_8==1) %>% 
+  survey_tally(name= "n",
+               vartype= c("cv", "se", "ci", "var"))->p9_8_8
+
+
+survey_endireh %>% 
+  mutate(existencia=case_when(
+    p9_8_1==1 |
+      p9_8_2 ==1|
+      p9_8_3 ==1|
+      p9_8_4 ==1|
+      p9_8_5 ==1|
+      p9_8_6 ==1|
+      p9_8_7 ==1|
+      p9_8_8 ==1|
+      p9_8_9 ==1|
+      p9_8_10 ==1 |
+      (p9_8_11==1 & (p9_8_12==2 | p9_8_13==2))~ 1, TRUE ~ 0)) %>% 
+  group_by(p9_8_9) %>% 
+  filter(existencia==1, 
+         nom_ent=="Ciudad de Mexico",
+         p9_8_9==1) %>% 
+  survey_tally(name= "n",
+               vartype= c("cv", "se", "ci", "var"))->p9_8_9
+
+
+survey_endireh %>% 
+  mutate(existencia=case_when(
+    p9_8_1==1 |
+      p9_8_2 ==1|
+      p9_8_3 ==1|
+      p9_8_4 ==1|
+      p9_8_5 ==1|
+      p9_8_6 ==1|
+      p9_8_7 ==1|
+      p9_8_8 ==1|
+      p9_8_9 ==1|
+      p9_8_10 ==1 |
+      (p9_8_11==1 & (p9_8_12==2 | p9_8_13==2))~ 1, TRUE ~ 0)) %>% 
+  group_by(p9_8_10) %>% 
+  filter(existencia==1, 
+         nom_ent=="Ciudad de Mexico",
+         p9_8_10==1) %>% 
+  survey_tally(name= "n",
+               vartype= c("cv", "se", "ci", "var"))->p9_8_10
+
+
+
+survey_endireh %>% 
+  group_by(nom_ent, p9_8_11) %>% 
+  filter(existencia==1,
+         nom_ent== "Ciudad de Mexico",
+         p9_8_11==1) %>% 
+  group_by(p9_8_11) %>% 
+  survey_tally(name= "n",
+               vartype= c("cv", "se", "ci", "var"))->p9_8_11
+
+
+survey_endireh %>% 
+  filter(existencia==1,
+         nom_ent== "Ciudad de Mexico",
+         p9_8_12==2) %>% 
+  group_by(p9_8_12) %>% 
+  survey_tally(name= "n",
+               vartype= c("cv", "se", "ci", "var"))->p9_8_12
+
+
+survey_endireh %>% 
+  filter(existencia==1,
+         nom_ent== "Ciudad de Mexico",
+         p9_8_13==2) %>% 
+  group_by(p9_8_13) %>% 
+  survey_tally(name= "n",
+               vartype= c("cv", "se", "ci", "var"))->p9_8_13
+
+library(plyr)
+indicador_2<- rbind.fill(p9_8_1, p9_8_2, p9_8_3,
+                         p9_8_4, p9_8_5, p9_8_6,
+                         p9_8_7, p9_8_8, p9_8_9,
+                         p9_8_10, p9_8_11, p9_8_12, p9_8_13)
