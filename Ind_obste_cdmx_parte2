@@ -1,0 +1,351 @@
+library(foreign) 
+library(survey) 
+library(srvyr) 
+library(dplyr)
+library(haven) 
+
+
+#Base completa de la ENDIREH
+endireh <- read_dta("BD_MUJERES_ENDIREH2016_SitioINEGI.dta")
+setnames(endireh, tolower(names(endireh)))
+
+#Formato de design de survey
+survey_endireh <- endireh %>% 
+  as_survey_design(
+    ids=upm_dis,
+    strata=est_dis,
+    weights=fac_muj,
+    nest=TRUE)
+
+
+survey_endireh %>% 
+  mutate(existencia=case_when(
+    p9_8_1==1 |
+      p9_8_2 ==1|
+      p9_8_3 ==1|
+      p9_8_4 ==1|
+      p9_8_5 ==1|
+      p9_8_6 ==1|
+      p9_8_7 ==1|
+      p9_8_8 ==1|
+      p9_8_9 ==1|
+      p9_8_10 ==1 |
+      (p9_8_11==1 & (p9_8_12==2 | p9_8_13==2))~ 1,
+    TRUE ~ 0)) %>% #,
+  # conyugal=case_when(
+  #   p2_16== 1 ~ "Casadas o unidas",
+  #   p2_16== 5 ~ "Casadas o unidas",
+  #   p2_16== 2 ~ "Separadas, divorciadas o viudas",
+  #   p2_16== 3 ~ "Separadas, divorciadas o viudas",
+  #   p2_16== 4 ~ "Separadas, divorciadas o viudas",
+  #   p2_16== 6 ~ "Soltera",
+  #   T~ 'No especificado')) %>% 
+  filter(existencia==1) %>% 
+  group_by(p2_16) %>% 
+  survey_tally(name= "n",
+               vartype= c("cv", "se", "ci", "var"))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##############Indigena
+
+
+survey_endireh %>% 
+  mutate(existencia=case_when(
+    p9_8_1==1 |
+      p9_8_2 ==1|
+      p9_8_3 ==1|
+      p9_8_4 ==1|
+      p9_8_5 ==1|
+      p9_8_6 ==1|
+      p9_8_7 ==1|
+      p9_8_8 ==1|
+      p9_8_9 ==1|
+      p9_8_10 ==1 |
+      (p9_8_11==1 & (p9_8_12==2 | p9_8_13==2))~ 1,
+    TRUE ~ 0),
+    var_indigena=case_when(
+      p2_11==1 & p2_10==1 | p2_10==2~ "Habla y/o pertenece a un hogar indígena", 
+      p2_11==2 & p2_10==3 | p2_10==4~ "No habla y/o pertenece a un hogar indígena",
+       T ~ 'Sin especificado')) %>% 
+  filter(existencia==1) %>% 
+  group_by(var_indigena) %>%   
+  survey_tally(name= "n",
+               vartype= c("cv", "se", "ci", "var"))
+
+
+
+survey_endireh_muestral <- endireh %>% 
+  as_survey_design(
+    ids=upm_dis,
+    strata=est_dis,
+    nest=TRUE)
+
+
+survey_endireh %>% 
+  mutate(existencia=case_when(
+    p9_8_1==1 |
+      p9_8_2 ==1|
+      p9_8_3 ==1|
+      p9_8_4 ==1|
+      p9_8_5 ==1|
+      p9_8_6 ==1|
+      p9_8_7 ==1|
+      p9_8_8 ==1|
+      p9_8_9 ==1|
+      p9_8_10 ==1 |
+      (p9_8_11==1 & (p9_8_12==2 | p9_8_13==2))~ 1,
+    TRUE ~ 0),
+    var_indigena=case_when(
+      p2_11==1 & (p2_10==1 | p2_10==2)~ "Habla y/o pertenece a un hogar indígena", 
+      p2_11==2 & (p2_10==3 | p2_10==8)~ "No habla y/o pertenece a un hogar indígena",
+      p2_11==9 ~ 'Sin especificar',
+      T ~ 'Sin especificar')) %>% 
+  filter(existencia==1) %>% 
+  group_by(var_indigena) %>%   
+  survey_tally(name= "n",
+               vartype= c("cv", "se", "ci", "var"))
+
+
+
+
+
+
+survey_endireh %>% 
+  mutate(existencia=case_when(
+    p9_8_1==1 |
+      p9_8_2 ==1|
+      p9_8_3 ==1|
+      p9_8_4 ==1|
+      p9_8_5 ==1|
+      p9_8_6 ==1|
+      p9_8_7 ==1|
+      p9_8_8 ==1|
+      p9_8_9 ==1|
+      p9_8_10 ==1 |
+      (p9_8_11==1 & (p9_8_12==2 | p9_8_13==2))~ 1,
+    TRUE ~ 0),
+    var_indigena=case_when(
+      p2_11==1 & p2_10==1 ~ "Habla y/o pertenece a un hogar indígena", 
+      p2_11==1 & p2_10==2 ~ "Habla y/o pertenece a un hogar indígena", 
+      p2_11==2 & p2_10==3 ~ "No habla y/o pertenece a un hogar indígena",
+      p2_11==2 & p2_10==8~ "No habla y/o pertenece a un hogar indígena",
+      p2_11==9 ~ 'Sin especificar',
+      T ~ 'Sin especificar')) %>% 
+  filter(existencia==1) %>% 
+  group_by(var_indigena) %>%   
+  survey_tally(name= "n",
+               vartype= c("cv", "se", "ci", "var"))
+
+
+
+
+survey_endireh_muestral %>% 
+  mutate(existencia=case_when(
+    p9_8_1==1 |
+      p9_8_2 ==1|
+      p9_8_3 ==1|
+      p9_8_4 ==1|
+      p9_8_5 ==1|
+      p9_8_6 ==1|
+      p9_8_7 ==1|
+      p9_8_8 ==1|
+      p9_8_9 ==1|
+      p9_8_10 ==1 |
+      (p9_8_11==1 & (p9_8_12==2 | p9_8_13==2))~ 1,
+    TRUE ~ 0),
+    var_indigena=case_when(
+      p2_11==1 & p2_10==1 ~ "Habla y/o pertenece a un hogar indígena", 
+      p2_11==1 & p2_10==2 ~ "Habla y/o pertenece a un hogar indígena", 
+      p2_11==2 & p2_10==3 ~ "No habla y/o pertenece a un hogar indígena",
+      p2_11==2 & p2_10==8~ "No habla y/o pertenece a un hogar indígena",
+      p2_11==9 ~ 'Sin especificar',
+      T ~ 'Sin especificar')) %>% 
+  filter(existencia==1) %>% 
+  group_by(var_indigena) %>%   
+  survey_tally(name= "n",
+               vartype= c("cv", "se", "ci", "var"))
+
+
+
+
+survey_endireh_muestral %>% 
+  mutate(existencia=case_when(
+    p9_8_1==1 |
+      p9_8_2 ==1|
+      p9_8_3 ==1|
+      p9_8_4 ==1|
+      p9_8_5 ==1|
+      p9_8_6 ==1|
+      p9_8_7 ==1|
+      p9_8_8 ==1|
+      p9_8_9 ==1|
+      p9_8_10 ==1 |
+      (p9_8_11==1 & (p9_8_12==2 | p9_8_13==2))~ 1,
+    TRUE ~ 0),
+    var_indigena=case_when(
+      p2_11==1 & p2_10==1 ~ "Habla y/o pertenece a un hogar indígena", 
+      p2_11==1 & p2_10==2 ~ "Habla y/o pertenece a un hogar indígena", 
+      p2_11==2 & p2_10==3 ~ "No habla y/o pertenece a un hogar indígena",
+      p2_11==2 & p2_10==8~ "No habla y/o pertenece a un hogar indígena",
+      p2_11==9 ~ 'Habla y/o pertenece a un hogar indígena',
+      T ~ 'Habla y/o pertenece a un hogar indígena')) %>% 
+  filter(existencia==1) %>% 
+  group_by(var_indigena) %>%   
+  survey_tally(name= "n",
+               vartype= c("cv", "se", "ci", "var"))
+
+
+
+survey_endireh_muestral %>% 
+  mutate(existencia=case_when(
+    p9_8_1==1 |
+      p9_8_2 ==1|
+      p9_8_3 ==1|
+      p9_8_4 ==1|
+      p9_8_5 ==1|
+      p9_8_6 ==1|
+      p9_8_7 ==1|
+      p9_8_8 ==1|
+      p9_8_9 ==1|
+      p9_8_10 ==1 |
+      (p9_8_11==1 & (p9_8_12==2 | p9_8_13==2))~ 1,
+    TRUE ~ 0),
+    var_indigena=case_when(
+      p2_11==1 & p2_10==1 ~ "Habla y/o pertenece a un hogar indígena", 
+      p2_11==1 & p2_10==2 ~ "Habla y/o pertenece a un hogar indígena", 
+      p2_11==2 & p2_10==3 ~ "No habla y/o pertenece a un hogar indígena",
+      p2_11==2 & p2_10==8~ "No habla y/o pertenece a un hogar indígena",
+      p2_11==9 ~ 'Habla y/o pertenece a un hogar indígena',
+      T ~ 'Habla y/o pertenece a un hogar indígena')) %>% 
+  filter(existencia==1, nom_ent=="Ciudad de Mexico") %>% 
+  group_by(var_indigena) %>%   
+  survey_tally(name= "n",
+               vartype= c("cv", "se", "ci", "var"))
+
+
+
+
+survey_endireh_muestral %>% 
+  mutate(existencia=case_when(
+    p9_8_1==1 |
+      p9_8_2 ==1|
+      p9_8_3 ==1|
+      p9_8_4 ==1|
+      p9_8_5 ==1|
+      p9_8_6 ==1|
+      p9_8_7 ==1|
+      p9_8_8 ==1|
+      p9_8_9 ==1|
+      p9_8_10 ==1 |
+      (p9_8_11==1 & (p9_8_12==2 | p9_8_13==2))~ 1,
+    TRUE ~ 0),
+    var_indigena=case_when(
+      p2_11==1 & p2_10==1 ~ "Habla y/o pertenece a un hogar indígena", 
+      p2_11==1 & p2_10==2 ~ "Habla y/o pertenece a un hogar indígena", 
+      p2_11==2 & p2_10==3 ~ "No habla y/o pertenece a un hogar indígena",
+      p2_11==2 & p2_10==8~ "No habla y/o pertenece a un hogar indígena",
+      p2_11==9 ~ 'Sin especificar',
+      T ~ 'Sin especificar')) %>% 
+  filter(existencia==1, nom_ent=="Ciudad de Mexico") %>% 
+  group_by(var_indigena) %>%   
+  survey_tally(name= "n",
+               vartype= c("cv", "se", "ci", "var"))
+
+
+
+
+
+
+
+
+
+##############################
+
+survey_endireh %>% 
+  mutate(existencia=case_when(
+    p9_8_1==1 |
+      p9_8_2 ==1|
+      p9_8_3 ==1|
+      p9_8_4 ==1|
+      p9_8_5 ==1|
+      p9_8_6 ==1|
+      p9_8_7 ==1|
+      p9_8_8 ==1|
+      p9_8_9 ==1|
+      p9_8_10 ==1 |
+      (p9_8_11==1 & (p9_8_12==2 | p9_8_13==2))~ 1,
+    TRUE ~ 0),
+    edad=case_when(
+      edad>=15 & edad<=24 ~ '15 a 24',
+      edad>=25 & edad<=34 ~ '25 a 34',
+      edad>=35 & edad<=49 ~ '35 y más',
+      TRUE ~ 'No especificado'),
+    conyugal=case_when(
+      p2_16== 1 ~ "Casadas o unidas",
+      p2_16== 5 ~ "Casadas o unidas",
+      p2_16== 2 ~ "Separadas, divorciadas o viudas",
+      p2_16== 3 ~ "Separadas, divorciadas o viudas",
+      p2_16== 4 ~ "Separadas, divorciadas o viudas",
+      p2_16== 6 ~ "Soltera",
+      TRUE ~ 'No especificado')) %>%
+  filter(existencia==1) %>% 
+  group_by(edad, conyugal) %>%   
+  survey_tally(name= "n",
+               vartype= c("cv", "se", "ci", "var"))->tab_4
+
+
+
+
+
+survey_endireh_muestral %>% 
+  mutate(existencia=case_when(
+    p9_8_1==1 |
+      p9_8_2 ==1|
+      p9_8_3 ==1|
+      p9_8_4 ==1|
+      p9_8_5 ==1|
+      p9_8_6 ==1|
+      p9_8_7 ==1|
+      p9_8_8 ==1|
+      p9_8_9 ==1|
+      p9_8_10 ==1 |
+      (p9_8_11==1 & (p9_8_12==2 | p9_8_13==2))~ 1,
+    TRUE ~ 0)) %>%
+  filter(existencia==1, nom_ent=="Ciudad de Mexico") %>% 
+  group_by(t_instrum) %>%   
+  survey_tally(name= "n",
+               vartype= c("cv", "se", "ci", "var"))
+
+
+     
+survey_endireh_muestral %>% 
+  mutate(existencia=case_when(
+    p9_8_1==1 |
+      p9_8_2 ==1|
+      p9_8_3 ==1|
+      p9_8_4 ==1|
+      p9_8_5 ==1|
+      p9_8_6 ==1|
+      p9_8_7 ==1|
+      p9_8_8 ==1|
+      p9_8_9 ==1|
+      p9_8_10 ==1 |
+      (p9_8_11==1 & (p9_8_12==2 | p9_8_13==2))~ 1,
+    TRUE ~ 0)) %>%
+  filter(existencia==1, nom_ent=="Ciudad de México") %>% 
+  group_by(t_cuest) %>%   
+  survey_tally(name= "n")
+
+
