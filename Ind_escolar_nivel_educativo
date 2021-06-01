@@ -1,0 +1,109 @@
+## SOLICITUD DE INFORMACIÓN | PREVALENCIA DE VIOLENCIA EN EL AMBITO ESCOLAR CONTRA LAS MUJERES DESAGREGADA POR NIVELES EDUCATIVOS
+## Fuente: ENDIREH 2021
+## Fecha: 14/05/2021
+
+##Incompleto
+
+
+library(foreign) # carga el paquete foreign
+library(survey) # carga el paquete survey
+library(dplyr)
+
+
+x<-read.dbf("TB_SEC_VI.dbf")
+endireh<-x
+
+y<-read.csv("conjunto_de_datos_tsdem_endireh_2016.csv") 
+
+
+violencia <- endireh %>%
+  select(ID_MUJ, UPM_DIS, FAC_MUJ, EST_DIS, P6_2,P6_4, starts_with("P6_6_"), starts_with('P6_8_'))
+
+z<-c(paste('P6_6_',seq(1, 17, by=1), sep=''), paste('P6_8_',seq(1, 1, by=1), sep=''))
+violencia[z]<-sapply(violencia[z], as.double)
+y<-c(paste('P6_8_',seq(3, 17, by=1), sep=''))
+violencia[y]<-sapply(violencia[y], as.double)
+
+violencia$P6_8_2<-as.numeric(levels(violencia$P6_8_2)[violencia$P6_8_2])
+
+
+library(stringr)
+
+
+violencia1<-violencia%>%mutate(across(starts_with('P6_8_'),
+          ~case_when(P6_2==1 & get(str_replace(cur_column(), 'P6_8_', 'P6_6_')) == 1 ~.,
+                     P6_2==1 & get(str_replace(cur_column(), 'P6_8_', 'P6_6_')) == 2 ~4,
+                     P6_2==1 & get(str_replace(cur_column(), 'P6_8_', 'P6_6_')) == 9 ~9,
+                     TRUE ~0), .names = '{.col}_temp'))
+
+
+
+existencia<-c(1:3)
+
+violencia1<-violencia1%>%
+  mutate(incidentes=case_when(
+    (if_any(P6_8_1_temp:P6_8_17_temp, ~.%in% existencia))~1, TRUE ~ 0))
+
+violencia1$incidentes<-factor(violencia1$incidentes, levels = c('1', '0'))
+
+
+violencia1 %>% 
+  group_by(P6_4) %>% 
+  filter(P6_2==1) %>% 
+  mutate(P6_4 = case_when(
+    P6_4 == 1 ~ "Educación basica",
+    P6_4 == 2 ~ "Educación basica",
+    P6_4 == 3 ~ "Educación media superior",
+    P6_4 == 4 ~ "Otros estudios",
+    P6_4 == 5 ~ "Otros estudios",
+    P6_4 == 6 ~ "Educación superior",
+    P6_4 == 7 ~ "Otros estudios" ))->a  #%>% 
+  #summarise(total_mujer= n())
+
+a<- a %>% 
+  select(UPM_DIS, FAC_MUJ, EST_DIS, P6_4, incidentes) %>% 
+  group_by(P6_4) 
+
+
+
+
+violencia1 %>% 
+  group_by(P6_4) %>%
+  mutate(P6_4 = case_when(
+    P6_4 == 1 ~ "Educación basica",
+    P6_4 == 2 ~ "Educación basica",
+    P6_4 == 3 ~ "Educación media superior",
+    P6_4 == 4 ~ "Otros estudios",
+    P6_4 == 5 ~ "Otros estudios",
+    P6_4 == 6 ~ "Educación superior",
+    P6_4 == 7 ~ "Otros estudios")) %>% 
+filter(P6_2==1,
+  P6_8_1_temp %in% existencia|
+  P6_8_2_temp %in% existencia|
+  P6_8_3_temp %in% existencia|
+  P6_8_4_temp %in% existencia|
+  P6_8_5_temp %in% existencia|
+  P6_8_6_temp %in% existencia|
+  P6_8_7_temp %in% existencia|
+  P6_8_8_temp %in% existencia|
+  P6_8_9_temp %in% existencia|
+  P6_8_10_temp %in% existencia|
+  P6_8_11_temp %in% existencia|
+  P6_8_12_temp %in% existencia|
+  P6_8_13_temp %in% existencia|
+  P6_8_14_temp %in% existencia|
+  P6_8_15_temp %in% existencia|
+  P6_8_16_temp %in% existencia|
+  P6_8_17_temp %in% existencia) ->b
+
+
+b<- b %>% 
+  select(UPM_DIS, FAC_MUJ, EST_DIS, P6_4, incidentes)
+
+
+#### A
+disenio_a<-svydesign(id=~UPM_DIS, strata=~EST_DIS, weights=~FAC_MUJ, data = a, nest = TRUE)
+
+svyby(~P6_4,
+      design = disenio_a, svytotal,
+      drop.empty.groups = FALSE,  na.rm.all = TRUE, na.rm.by = FALSE)
